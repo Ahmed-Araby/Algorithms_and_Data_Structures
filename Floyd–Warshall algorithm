@@ -1,6 +1,3 @@
-// shortest path and the path itself 
-// it could be done recursively 
-// could be done also using 3D array the third D is K the intermedite node 
 #include<bits/stdc++.h>
 using namespace std;
 #define oo 105*50+5 // max value if the my path will go throw all the edges and more
@@ -42,7 +39,9 @@ int main()
                 if(g[i][k]+g[k][j]<g[i][j]){
                     g[i][j]=g[i][k]+g[k][j]; // sp
                     // previous technique
-                    path[i][j]=k; // so I come to j using k them I cam to K using some other node and we
+                    // ******************** important *************************
+                    // in case of intermedite nodes between k and J that I need to get
+                    path[i][j]=path[k][j]; // so I come to j using k them I cam to K using some other node and we
                     // will keep going down until we reach node i it self
                 }
             }
