@@ -1,0 +1,63 @@
+// Dijkstra with negative edges  could work 
+// but with negative cycle it will go into infinite loop cuz each time he found shorter path 
+#include <bits/stdc++.h>
+using namespace std;
+#define pi pair<int , int> // weight , node id
+int main()
+{
+    int n;
+    cin>>n;
+    int g[50][50];
+    for(int i=0; i<=n; i++)
+        for(int j=0; j<=n; j++)
+        g[i][j]=-1;  // no connection
+    int f , t , w;
+    while(cin>>f>>t>>w && f!=0)
+    {
+        g[f][t]=w;
+    }
+    for(int i=1; i<=n; i++)
+    {
+        for(int j=1; j<=n; j++)
+            cout<<g[i][j]<<" ";
+        cout<< endl;
+    }
+    // apply DJ
+    int s;
+    cin>>s;
+    int dis[50];
+    for(int i=0; i<=50; i++)
+        dis[i]=-1; // not visited yet
+    priority_queue<pi , vector<pi> , greater<pi> > q; // make the bigger first (top is the last here)
+    q.push({0 , s});
+    dis[s]=0;
+    while(!q.empty())
+    {
+        // pick closest
+        //remove your clossest node
+        int v=q.top().second;
+        int w=q.top().first;
+        q.pop(); // remove the node
+        if(w>dis[v])  // pruning I came here before with better distance (but actually I get it after but the sort did so)
+            continue;
+        // build the connection (just the better once)
+        // relax
+        for(int i=1; i<=n; i++)
+        {
+            if(g[v][i]==-1)
+                continue; //  no connection
+            int child=i;
+            //cout<<dis[child]<<" "<<child<< endl;
+            if(dis[child]==-1 || dis[child]>dis[v]+g[v][child])
+            {
+                dis[child]=dis[v]+g[v][child];
+                q.push({dis[child] , child});
+            }
+            // else continue;
+        }
+    }
+    for(int i=1; i<=n; i++)
+        cout<<i<<" "<<dis[i]<<" "<<endl;
+    cout<< endl;
+    return 0;
+}
