@@ -1,0 +1,76 @@
+// Matrix Chain Multiplication
+
+// matrix chain problem
+// recursive code
+/*#include <bits/stdc++.h>
+using namespace std;
+int solve(int m[] , int i , int j) // start , end
+{
+    //cout<<"here1"<< endl;
+    // base case
+    if(i==j)
+        return 0;
+    // recursive case
+    int mini=INT_MAX;
+    // cut from here or not (we cut from the half )
+    //cout<<"here2"<< endl;
+    // it`s all about cut here or not and so on
+    for(int k=i; k<j; k++) // this is all my current matrix
+    {
+        // cur from k
+        int cost=m[i-1]*m[k]*m[j]; // first , middle , end
+        int tmp=solve(m , i , k); // start , end
+        tmp+=solve(m , k+1 , j); // start , end
+        tmp+=cost;
+        mini=min(mini , tmp);
+    }
+    //cout<<"here3"<< endl;
+    return mini;
+}
+int main()
+{
+    int n;
+    cin>>n;
+    int arr[]={1 , 2 , 3 , 4};  // 1*2 , 2*3 , 3*4
+    cout<<solve(arr , 1 , n-1)<< endl;
+    return 0;
+}*/
+
+
+// dp code for chain matrix problem 
+#include <bits/stdc++.h>
+using namespace std;
+int main()
+{
+    int n;
+    cin>>n;
+     //                        0 ,1   / 1 , 2   / 2 , 3
+    int arr[]={1 , 2 , 3 , 4};  // 1*2 , 2*3 , 3*4
+    int dp[5][5];
+    for(int i=0; i<=n; i++)
+        for(int j=0; j<=n; j++)
+        dp[i][j]=0;
+    for(int i=n-1; i>0; i--)  // start
+    {
+        for(int j=i; j<n; j++)  // end  // trick of j=i to avoid j<i cuz it`s not a valid matrix 
+        {
+            if(i==j)
+                dp[i][j]=0; // just one matrix
+            else if(j<i)  // non valid matrix
+                continue;
+            else // valid sequence constructed of 2 matrices or more
+            {
+                int mini=INT_MAX;
+                // start new problem bit every thing it need is exist
+                for(int k=i; k<j; k++)  // I can cut from i start cuz it valid start but not from end cuz nothing after it is valid in k+1
+                {
+                    int cost=dp[i][k]+dp[k+1][j]+arr[i-1]*arr[k]*arr[j]; // best cost for each part of the cut + cost of the whole matrix
+                    mini=min(mini , cost);
+                }
+                dp[i][j]=mini;
+            }
+        }
+    }
+    cout<<dp[1][n-1]<< endl;
+    return 0;
+}
