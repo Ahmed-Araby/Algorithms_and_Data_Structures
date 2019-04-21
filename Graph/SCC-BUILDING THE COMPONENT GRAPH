@@ -1,0 +1,130 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<vector<int> > g(105), rg(105) , cg(105);
+vector<int> trav;   // what is the problem with using dequeu ?
+vector<int> scc;
+int t=0 , tout[105];  // actually I don't need tout
+bool vis[105];
+map<int , int> mark; // map each node to it's SCC
+void dfs1(int node)
+{
+    if(vis[node])
+        return;
+    vis[node]=1;
+    t++; // in - time
+    for(int i=0; i<g[node].size(); i++)
+    {
+        int child=g[node][i];
+        dfs1(child);
+    }
+    t++; // out_time
+    tout[node]=t;
+    trav.push_back(node); // fist one to pushed is the mini tout  , last one is the max tout so I will traverse it form begin that save me sorting time
+    return ;
+}
+void dfs2(int node)
+{
+    if(vis[node]) return;
+    vis[node]=1;
+    scc.push_back(node);
+    for(int i=0; i<rg[node].size(); i++)
+    {
+        int child=rg[node][i];
+        dfs2(child);
+    }
+    return ;
+}
+void dfs3(int node)
+{
+    if(vis[node])
+        return ;
+    vis[node]=1;
+    int me=mark[node];
+    for(int i=0; i<g[node].size(); i++)
+    {
+        int child=g[node][i];
+        int it=mark[child];
+        if(it!=me)
+            cg[me].push_back(it); // direct connection from this component to this component
+        dfs3(child);
+    }
+    return ;
+}
+int main()
+{
+    int n , m;
+    cin>>n>>m;
+    for(int i=0; i<m; i++)
+    {
+        int f , t;
+        cin>>f>>t;
+        // original
+        g[f].push_back(t);
+        // reversed
+        rg[t].push_back(f);
+    }
+    // out time
+    for(int i=1; i<=n; i++)
+        if(!vis[i])
+        dfs1(i);
+
+    // SCC , traverse trav from rg
+    for(int i=0; i<=n; i++)
+        vis[i]=0;
+    int c=0;
+    cout<<trav.size()<< endl;
+    for(int i=trav.size()-1; i>=0; i--)
+    {
+        int node=trav[i];
+        cout<<trav[i]<<" "<< endl;
+        if(vis[node]) continue;
+        cout<<"OKAY"<< endl;
+
+        scc.clear();
+        dfs2(node);
+        c++;
+        cout<<"SCC # "<<c<< endl;
+        for(int j=0; j<scc.size(); j++){
+            mark[scc[j]]=c;
+            cout<<scc[j]<<" ";
+        }
+        cout<< endl<< endl;
+    }
+    cout<<endl;
+    // build the component graph itself using mark graph and the original graph
+    for(int i=0; i<=n; i++)
+        vis[i]=0;
+    for(int i=1; i<=n; i++)
+        if(!vis[i])
+        dfs3(i);
+    // display the C_G
+    for(int i=1; i<=c; i++){
+        cout<<"comp #"<<i<<" is connected to "<< endl;
+        for(int j=0; j<cg[i].size(); j++)
+            cout<<cg[i][j]<<" ";
+        cout<< endl;
+    }
+    return 0;
+}
+/*
+// SAMPLE DATA INPUT 
+
+13 17
+1 2
+2 3
+3 1
+2 4
+4 5
+5 6
+6 4
+6 7
+7 8
+8 9
+9 7
+3 9
+3 10
+10 11
+11 12
+12 13
+13 10
+*/
