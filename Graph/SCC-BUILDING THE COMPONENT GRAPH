@@ -5,7 +5,7 @@ vector<int> trav;   // what is the problem with using dequeu ?
 vector<int> scc;
 int t=0 , tout[105];  // actually I don't need tout
 bool vis[105];
-map<int , int> mark; // map each node to it's SCC
+map<int , int> mark; // map each node to it's SCC  , could be simply an array it will give us faster access 
 void dfs1(int node)
 {
     if(vis[node])
