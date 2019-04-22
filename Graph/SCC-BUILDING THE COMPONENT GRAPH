@@ -1,3 +1,6 @@
+/*
+this algo have a flow such that we can have multiple edges between same SCC and WE HAVE TO Ignore them 
+*/
 #include <bits/stdc++.h>
 using namespace std;
 vector<vector<int> > g(105), rg(105) , cg(105);
