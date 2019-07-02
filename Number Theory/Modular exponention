@@ -25,3 +25,18 @@ int main()
 	cout << mod_exp(n, p, m) << endl;
 	return 0;
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+// simpler on e
+int fast_pow(int n , int p)
+{
+    if(p==0) return 1;
+    if(p==1) return n;
+    int tmp=fast_pow(n , p/2);
+    tmp=tmp*tmp;
+    if(p%2)
+        tmp*=n;
+    return tmp;
+}
