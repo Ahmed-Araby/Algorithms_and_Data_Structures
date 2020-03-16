@@ -35,16 +35,6 @@ private:
 	int count;
 	Node *root;
 
-public:
-	// methods
-	AvlTree() 
-	{
-		root = NULL;
-		count = 0;
-		cout << "hey Iam AVL Tree " << endl;
-		return;
-	}
-
 	// BST 
 	Node* insert(int val, Node* root)
 	{
@@ -66,19 +56,13 @@ public:
 		/////////////////////////////////////////////
 		return root;
 	}
-	void insert(int val){
-		root = insert(val, root);
-		return;
-	}
+	
 
-	Node *del(int val , Node *root)
+	Node *remove(int val , Node *root)
 	{
-		if (root == NULL)
-			return NULL;
-
-		if (root->val == val)
+		// found the value 
+		if (root->val == val) 
 		{
-			count--;
 			// delete 
 			if (root->left != NULL && root->right != NULL)
 			{
@@ -87,37 +71,48 @@ public:
 				or
 				min in the right
 				*/
-
-				int new_val = get_min(root->right);
-				cout << "min value is " << new_val << endl;
-				del(new_val); // will be leaf node or node with 1 child
-				root->val = new_val;
+				int lh = root->left->height, rh = root->right->height;
+				if (rh >= lh)
+				{
+					int new_val = get_min(root->right);
+					cout << "min value is " << new_val << endl;
+					root->right = remove(new_val, root->right); // will be leaf node or node with 1 child
+					root->val = new_val;
+				}
+				else
+				{
+					int new_val = get_max(root->left);
+					cout << "max value is " << new_val << endl;
+					// don't decrease the number of nodes **
+					root->left = remove(new_val, root->left); 
+					root->val = new_val;
+				}
 			}
 
-			else if (root->left == NULL)
-				root = root->right;
-			else if (root->right == NULL)
-				root = root->left;
-			/*
-			// will not be executed ever 
-			else // delete leaf node 
-				root = NULL;
-			*/
-
-			/*
-			 no update or balance need in this case 
-			*/
-			return root;
+			// will also take care of leaf node case
+			else if (root->left == NULL) {
+				Node *tmp = root->right;
+				delete root; // **************** delete the space in memoery ******************
+				root = tmp;
+				
+			}
+			else if (root->right == NULL) {
+				Node *tmp= root->left;
+				delete root; // **************** delete the space in memoery ******************
+				root = tmp;
+			}
 		}
+
 		else if (val > root->val)
-			root->right = del(val, root->right);  // make right point at the new modified subtree 
+			root->right = remove(val, root->right);  // make right point at the new modified subtree 
 		else if (val < root->val)
-			root->left = del(val, root->left);
+			root->left = remove(val, root->left);
 		
 		//////////////////////////////////////////////
 		// next 2 lines are what make it balanced BST
 		update(root);
 		root = balance(root);
+		// nodes envolved get updated again in the rotation methods 
 		/////////////////////////////////////////////
 
 		/*
@@ -126,10 +121,30 @@ public:
 		*/
 		return root;
 	}
-
-	void del(int val) {
-		root = del(val, root);
+public:
+	AvlTree()
+	{
+		root = NULL;
+		count = 0;
+		cout << "hey Iam AVL Tree " << endl;
 		return;
+	}
+
+	bool insert(int val) {
+		if (!contain(val)) {
+			root = insert(val, root);
+			return true;
+		}
+		return false;
+	}
+
+	bool remove(int val) {
+		if (contain(val)) {
+			count--;
+			root = remove(val, root);
+			return true;
+		}
+		return false;;
 	}
 
 	bool contain(int val)
@@ -166,6 +181,7 @@ public:
 		}
 		return min_val;
 	}
+
 	int get_max(Node* ptr)
 	{
 		int max_val = ptr->val;
@@ -178,6 +194,7 @@ public:
 		}
 		return max_val;
 	}
+
 	void dfs(Node* ptr)
 	{
 		if (ptr == NULL) 
@@ -193,6 +210,8 @@ public:
 		dfs(root);
 	}
 
+
+private:
 	// B-BST
 	// rotations 
 	
@@ -206,7 +225,8 @@ public:
 
 	Node* balance(Node* root)
 	{
-		// ***** we need to update the bf and heights after the rotation *****
+		if (root == NULL)
+			return NULL;
 
 		int bf = root->balance_factor;
 		if (bf == 2)
@@ -228,6 +248,9 @@ public:
 
 	void update(Node* root)
 	{
+		if (root == NULL)
+			return;
+
 		int rh = -1, lh = -1;
 		if (root->right != NULL)
 			rh = root->right->height;
@@ -286,5 +309,13 @@ public:
 		// left left rotation to the sub tree rooted at cur_ptr
 		return left_left_rotation(cur_ptr);
 	}
-};
 
+	bool validate()
+	{
+		/*
+		  ****** to be implemented ******
+		*/
+		cout << "check the invarient of binary search tree" << endl;
+		return true;
+	}
+};

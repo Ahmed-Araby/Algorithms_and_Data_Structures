@@ -12,8 +12,25 @@ int main()
 	{
 		t.insert(l[i]);
 	}
-	t.del(5);
-	t.del(8);
+	t.remove(5);
+	t.remove(4);
+	t.remove(13);
+	t.remove(11);
+	t.remove(14);
+	t.insert(13);
+	t.insert(14);
+	t.remove(13);
+	t.remove(11);
+	t.remove(14);
+	t.remove(1);
+	t.remove(9);
+	t.insert(114);
+
+	//t.insert(11);
+	bool tell = t.remove(0);
+	cout << tell << " " << "is the response for removing 0 which is not exist" << endl;
+	cout << "contain response "<<t.contain(11) << " " << t.contain(0) << endl;
+
 	cout << t.size() << endl;
 	cout << endl;
 	t.dfs();
