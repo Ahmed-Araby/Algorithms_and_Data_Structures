@@ -1,0 +1,2 @@
+1- handle duplicate keys insertion.
+2- sync table operation with the tree insert and delete  and suppor find ops and range ops

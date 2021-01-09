@@ -1,0 +1,122 @@
+# roles and facts
+
+-- no bigger than branch in the leaf node
+
+-- Limit = 4 mean max allowed is 3 branches mean 2 keys and the third branch is for
+bigger than.
+
+-- there is no inner node with no bigger than reference other wise thre is no reason
+for it's existance.
+
+-- branch have keys < the key corresponding to this branch.
+
+-- how to handle duplicates in the keys !!!
+
+-- root is a node.
+
+-- root.refs.get(index) is an object.
+
+-- leaf node split itself into leaf nodes
+
+-- inner node split itself into inner nodes
+
+-- change condition to <=
+
+-- change the new key of spliting to be the middle key from the left node
+
+-- biggerThan branch always exist in any inner node and it's not empty, this comes from the way we create it
+    and merge it with other neighbour nodes and spliting it.
+
+# empty tree insertion:
+leaf node + normal insert
+
+# leaf node exceed the limit
+split
+
+# inner node exceed the limit
+split
+
+# spliting
+- only leaf node
+inner node will have 1 key point at the old node
+and the bigger than reference will point at the new leaf node
+
+------------------------------------
+- 1 leaf node of inner node
+if normal node
+update it's key with the mid
+insert the new key
+
+else the biggest node
+insert the old one with the mid
+and assign the reference to the new right half
+-------------------------------------
+1- inner node
+if normal same as normal leaf node
+
+else biggest
+same as biggest leaf node
+
+
+
+--------- deleting ----------
+
+1- deletion only happen on the leaf nodes.
+2- if # of keys in a node <  limit / 2 -1 then we need to merge it with one of it's sibilings
+3- merge could propogate up ward till the root.
+4- we can't do merge for the root as it have no sibilings, so the root is allowed to break the
+   properties of the btree strcuture
+
+5- wold we do split after merge? yep only once
+    and this will be considered as merge terminator as this will leave the current node
+    on the original state but with child nodes keys reordered as keys of the current node
+    changed a bit.
+
+6- no split after merge would lead to nodes that need to be merged again.
+7- no node can hold 2 different types of nodes. this is not enforced in the code.!!!!!!!!!????
+8- nodes to be merged have to be adjacent childes.
+
+9-  method to be implemented.
+    merge method for leaf node. +
+    merge method for inner node. +
+    merge childes inside the b tree class.
+    recursive delete method in the b tree class.
+
+notes:
+the nood I meged its childes , would need to mergeh
+the nood that I merged may need to be splited again.
+
+warnning:
+- because of the way that I merge inner node this could produce
+  repeated keys in inner nodes.
+  so we need to edit the condition of the tree.
+
+- untill now the tree don't handle repeated keys.
+
+
+
+## current bug
+i need to make the condition of the tree < only not <=
+as if <= then merge operation could generate duplicates keys in the child nodes
+as bigger then branch  will get the key thet guide to the node that contain the bigger than branch
+
+change the condition without harming the insert and split operations !!!!
+
+
+no it's not a problem as we use the key only in the merge of inner node case
+and this will get the node back to its original situation.
+
+
+I was testing wrong from the begining
+the case in my head will not happen.
+
+------------------------------------------------------------------------------
+final decision
+condition is <=
+split with the midean key
+merge and put the parent key as key for the greater branch of the left node.
+------------------------------------------------------------------------------
+
+
+need merge function may cuz issues.
+
