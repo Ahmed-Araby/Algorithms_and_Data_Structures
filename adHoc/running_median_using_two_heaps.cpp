@@ -1,3 +1,8 @@
+/*
+*https://www.youtube.com/watch?v=VmogG01IjYc&ab_channel=HackerRank
+* in this video solution I guess we do not need to add any elemetn to the higher heap at all, 
+ we just can keep adding to the lower heap and repalance them after every addition
+*/
 #include <bits/stdc++.h>
 using namespace std;
 
