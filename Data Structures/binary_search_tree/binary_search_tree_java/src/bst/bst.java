@@ -35,6 +35,7 @@ public class bst {
             return false;
 
         root = delete(root, value);
+        size -=1;
         return true;
     }
 
